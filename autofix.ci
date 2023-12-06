@@ -1,0 +1,21 @@
+name: autofix.ci
+on:
+  workflow_call:
+  pull_request:
+  push:
+    branches: [ "main" ]
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Fix lint errors with https://github.com/charliermarsh/ruff
+      - uses: install-pinned/ruff@0e35bc58bd73769469284df9e1f8898daeea8768
+      - run: ruff --fix-only .
+      - run: ruff format .
+
+      - uses: autofix-ci/action@d3e591514b99d0fca6779455ff8338516663f7cc
